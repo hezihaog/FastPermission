@@ -1,0 +1,18 @@
+package com.hzh.fast.permission.base;
+
+/**
+ * Created by Hezihao on 2017/7/10.
+ * Fragment生命周期回调接口
+ */
+
+public interface FragmentLifecycleListener {
+    void onAttach();
+
+    void onStart();
+
+    void onStop();
+
+    void onDestroy();
+
+    void onDetach();
+}
