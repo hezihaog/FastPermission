@@ -12,6 +12,7 @@ import com.hzh.fast.permission.base.LifecycleFragment;
 import com.hzh.fast.permission.base.SimpleFragmentLifecycleAdapter;
 import com.hzh.fast.permission.callback.PermissionCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
 
     protected Activity _activity;
     protected Fragment _fragment;
-    private PermissionCallback mCallback;
+    private WeakReference<PermissionCallback> mCallbackWeak;
 
     public static PermissionDelegateFragment newInstance() {
         return new PermissionDelegateFragment();
@@ -51,6 +52,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
             public void onAttach() {
                 super.onAttach();
                 runnable.run();
+                mCallbackWeak = null;
                 getLifecycle().removeListener(this);
             }
         });
@@ -64,13 +66,15 @@ public class PermissionDelegateFragment extends LifecycleFragment {
      * @param perms    要申请的权限数组
      */
     public void requestPermission(final Context context, PermissionCallback callback, final String[] perms) {
-        this.mCallback = callback;
+        this.mCallbackWeak = new WeakReference<PermissionCallback>(callback);
         waitReady(new Runnable() {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    mCallback.onGranted();
-                    return;
+                    if (mCallbackWeak != null && mCallbackWeak.get() != null) {
+                        mCallbackWeak.get().onGranted();
+                        return;
+                    }
                 }
                 //只申请用户未允许的权限
                 List<String> unGrantedList = new ArrayList<String>();
@@ -82,7 +86,9 @@ public class PermissionDelegateFragment extends LifecycleFragment {
                 if (unGrantedList.size() > 0) {
                     _fragment.requestPermissions(unGrantedList.toArray(new String[]{}), REQUEST_CODE);
                 } else {
-                    mCallback.onGranted();
+                    if (mCallbackWeak != null && mCallbackWeak.get() != null) {
+                        mCallbackWeak.get().onGranted();
+                    }
                 }
             }
         });
@@ -93,7 +99,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CODE:
-                if (grantResults.length > 0) {
+                if (grantResults.length > 0 && (mCallbackWeak != null && mCallbackWeak.get() != null)) {
                     //找出拒绝的权限
                     List<String> deniedList = new ArrayList<String>();
                     for (int i = 0; i < grantResults.length; i++) {
@@ -105,9 +111,9 @@ public class PermissionDelegateFragment extends LifecycleFragment {
                     }
                     //已全部允许
                     if (deniedList.isEmpty()) {
-                        mCallback.onGranted();
+                        mCallbackWeak.get().onGranted();
                     } else {
-                        mCallback.onDenied(deniedList);
+                        mCallbackWeak.get().onDenied(deniedList);
                     }
                 }
                 break;

@@ -1,5 +1,6 @@
 package com.hzh.fast.permission.delegate;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
@@ -25,7 +26,7 @@ public class PermissionDelegateFinder {
     /**
      * 添加隐藏权限fragment
      */
-    public PermissionDelegateFragment find(FragmentActivity activity) {
+    public PermissionDelegateFragment find(@NonNull FragmentActivity activity) {
         PermissionDelegateFragment fragment = null;
         if (activity != null && !activity.isFinishing()) {
             FragmentManager fm = activity.getSupportFragmentManager();
