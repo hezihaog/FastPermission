@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             PermissionList = new String[]
                     {Manifest.permission.READ_EXTERNAL_STORAGE
-                            , Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE};
         } else {
             PermissionList = new String[]
-                    {Manifest.permission.WRITE_EXTERNAL_STORAGE,};
+                    {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE};
         }
 
         Button request = (Button) findViewById(R.id.request);

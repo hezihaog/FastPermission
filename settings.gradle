@@ -1,1 +1,1 @@
-include ':app', ':FastPermission'
+include ':sample', ':FastPermission'
