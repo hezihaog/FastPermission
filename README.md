@@ -2,5 +2,5 @@
 一个快速适配Android6.0权限的库。
 
 - 快速使用
-1. gradle 依赖 compile
-- 'com.hzh.FastPermission:FastPermission:1.0.1'
+- ${latest.version}改为最新版本
+- gradle 依赖 'com.hzh.FastPermission:FastPermission:${latest.version}'
