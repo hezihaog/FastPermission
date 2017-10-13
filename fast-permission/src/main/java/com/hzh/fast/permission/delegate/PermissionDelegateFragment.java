@@ -1,4 +1,4 @@
-package com.hzh.fast.permission;
+package com.hzh.fast.permission.delegate;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.SparseArrayCompat;
 
-import com.hzh.fast.permission.base.LifecycleFragment;
-import com.hzh.fast.permission.base.SimpleFragmentLifecycleAdapter;
+import com.hzh.fast.permission.lifecycle.LifecycleFragment;
+import com.hzh.fast.permission.lifecycle.SimpleFragmentLifecycleAdapter;
 import com.hzh.fast.permission.callback.PermissionCallback;
 import com.hzh.fast.permission.entity.RequestEntry;
 
@@ -35,6 +35,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        popAll();
         getLifecycle().removeAllListener();
     }
 
@@ -49,11 +50,11 @@ public class PermissionDelegateFragment extends LifecycleFragment {
     }
 
     /**
-     * 必须让任务在onAttach后执行
+     * 请求操作必须在OnAttach后调用
      *
-     * @param entry 回调监听
+     * @param entry 请求包装对象
      */
-    private void PopDownTask(final RequestEntry entry) {
+    private void pushStack(final RequestEntry entry) {
         callbacks.put(entry.hashCode(), entry);
         this.getLifecycle().addListener(new SimpleFragmentLifecycleAdapter() {
             @Override
@@ -64,6 +65,25 @@ public class PermissionDelegateFragment extends LifecycleFragment {
             }
         });
     }
+
+    /**
+     * 结束任务，在集合中移除
+     *
+     * @param entry 要移除的请求包装对象
+     */
+    private void popStack(RequestEntry entry) {
+        callbacks.remove(entry.hashCode());
+    }
+
+    /**
+     * 移除所有callback
+     */
+    private void popAll() {
+        if (callbacks != null && callbacks.size() > 0) {
+            callbacks.clear();
+        }
+    }
+
 
     /**
      * 批量申请权限
@@ -77,7 +97,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
             callback.onGranted();
             return;
         }
-        PopDownTask(RequestEntry.newBuilder().setCallback(callback).setRunnable(new Runnable() {
+        pushStack(RequestEntry.newBuilder().withCallback(callback).withRunnable(new Runnable() {
             @Override
             public void run() {
                 //只申请用户未允许的权限
@@ -122,7 +142,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
                         } else {
                             callback.onDenied(deniedList);
                         }
-                        callbacks.remove(entry.hashCode());
+                        popStack(entry);
                     }
                 }
                 break;

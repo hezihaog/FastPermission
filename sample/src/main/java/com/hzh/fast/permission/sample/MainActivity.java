@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.hzh.fast.permission.PermissionManager;
+import com.hzh.fast.permission.FastPermission;
 import com.hzh.fast.permission.callback.PermissionCallback;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
      * @param perms 需要申请的权限数组
      */
     private void requestPermission(String[] perms) {
-        PermissionManager.getInstance().request(MainActivity.this, new PermissionCallback() {
+        FastPermission.getInstance().request(MainActivity.this, new PermissionCallback() {
             @Override
             public void onGranted() {
                 Toast.makeText(MainActivity.this, "申请权限成功，可进行下一步操作", Toast.LENGTH_SHORT).show();

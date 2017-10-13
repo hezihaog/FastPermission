@@ -1,4 +1,4 @@
-package com.hzh.fast.permission.base;
+package com.hzh.fast.permission.lifecycle;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

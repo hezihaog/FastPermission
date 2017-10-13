@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
-import com.hzh.fast.permission.PermissionDelegateFragment;
-
 
 /**
  * Created by Hezihao on 2017/7/10.

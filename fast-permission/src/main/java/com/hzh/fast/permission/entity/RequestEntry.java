@@ -36,12 +36,12 @@ public class RequestEntry {
         private  PermissionCallback callback;
         private Runnable runnable;
 
-        public Builder setCallback(PermissionCallback callback) {
+        public Builder withCallback(PermissionCallback callback) {
             this.callback = callback;
             return this;
         }
 
-        public Builder setRunnable(Runnable runnable) {
+        public Builder withRunnable(Runnable runnable) {
             this.runnable = runnable;
             return this;
         }

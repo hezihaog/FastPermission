@@ -1,4 +1,4 @@
-package com.hzh.fast.permission.base;
+package com.hzh.fast.permission.lifecycle;
 
 /**
  * Created by Hezihao on 2017/7/10.

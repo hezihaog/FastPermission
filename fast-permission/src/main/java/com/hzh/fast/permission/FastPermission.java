@@ -10,21 +10,22 @@ import android.support.v4.content.ContextCompat;
 
 import com.hzh.fast.permission.callback.PermissionCallback;
 import com.hzh.fast.permission.delegate.PermissionDelegateFinder;
+import com.hzh.fast.permission.delegate.PermissionDelegateFragment;
 
 /**
  * Created by Hezihao on 2017/7/10.
  * 权限管理器
  */
 
-public class PermissionManager {
-    private PermissionManager() {
+public class FastPermission {
+    private FastPermission() {
     }
 
     private static class Singleton {
-        private static final PermissionManager instance = new PermissionManager();
+        private static final FastPermission instance = new FastPermission();
     }
 
-    public static PermissionManager getInstance() {
+    public static FastPermission getInstance() {
         return Singleton.instance;
     }
 
