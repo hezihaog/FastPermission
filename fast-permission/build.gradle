@@ -30,7 +30,7 @@ def siteUrl = 'https://github.com/hezihaog/FastPermission'
 //项目的git地址
 def gitUrl = 'https://github.com/hezihaog/FastPermission.git'
 //发布到JCenter上的项目名字
-def libName = "FastPermission"
+def libName = "fast-permission"
 
 //发布到组织名称名字，必须填写
 group = "com.hzh"
