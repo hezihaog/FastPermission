@@ -42,7 +42,11 @@ public class FastPermission {
      * 检查指定权限是否已经获取
      */
     public boolean isAccept(Context context, String permission) {
-        return isNeedCheck() && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+        if (!isNeedCheck()) {
+            return true;
+        } else {
+            return isNeedCheck() && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+        }
     }
 
     /**
