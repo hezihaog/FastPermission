@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0.1"
+        versionCode 2
+        versionName "1.0.4"
     }
     buildTypes {
         release {
@@ -35,7 +35,7 @@ def libName = "fast-permission"
 //发布到组织名称名字，必须填写
 group = "com.hzh"
 // 版本号，下次更新是只需要更改版本号，并且 gradle bintrayUpload 即可
-version = "1.0.3"
+version = "1.0.4"
 //上面配置后上传至JCenter后的编译路径是这样的： compile 'me.songning.CircleView:library:1.0.0'
 
 //生成源文件

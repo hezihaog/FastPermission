@@ -3,16 +3,14 @@ package com.hzh.fast.permission.delegate;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.SparseArrayCompat;
 
-import com.hzh.fast.permission.lifecycle.LifecycleFragment;
-import com.hzh.fast.permission.lifecycle.SimpleFragmentLifecycleAdapter;
 import com.hzh.fast.permission.callback.PermissionCallback;
 import com.hzh.fast.permission.entity.RequestEntry;
+import com.hzh.fast.permission.lifecycle.LifecycleFragment;
+import com.hzh.fast.permission.lifecycle.SimpleFragmentLifecycleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +35,6 @@ public class PermissionDelegateFragment extends LifecycleFragment {
         super.onDetach();
         popAll();
         getLifecycle().removeAllListener();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //内存重启移除掉该fragment
-        if (getActivity() != null) {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.beginTransaction().remove(this).commitAllowingStateLoss();
-        }
     }
 
     /**
