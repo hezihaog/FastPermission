@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Hezihao on 2017/7/10.
  */
 
-public class FragmentLifecycle implements Lifecycle {
+public class FragmentLifecycle implements Lifecycle<FragmentLifecycleListener> {
     //读写分离，避免遍历的同时add进集合，抛出高并发异常。
     private final CopyOnWriteArrayList<FragmentLifecycleListener> lifecycleListeners = new CopyOnWriteArrayList<FragmentLifecycleListener>();
     private boolean isAttach;

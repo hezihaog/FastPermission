@@ -5,7 +5,7 @@ package com.hzh.fast.permission.lifecycle;
  * Fragment生命周期回调接口
  */
 
-public interface FragmentLifecycleListener {
+public interface FragmentLifecycleListener extends LifecycleListener {
     void onAttach();
 
     void onStart();
