@@ -9,8 +9,8 @@ import android.support.v4.util.SparseArrayCompat;
 
 import com.hzh.fast.permission.callback.PermissionCallback;
 import com.hzh.fast.permission.entity.RequestEntry;
-import com.hzh.fast.permission.lifecycle.LifecycleFragment;
-import com.hzh.fast.permission.lifecycle.SimpleFragmentLifecycleAdapter;
+import com.hzh.lifecycle.dispatch.adapter.SimpleFragmentLifecycleAdapter;
+import com.hzh.lifecycle.dispatch.base.LifecycleFragment;
 
 import java.util.ArrayList;
 import java.util.List;
