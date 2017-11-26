@@ -2,13 +2,12 @@ package com.hzh.fast.permission.delegate;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.SparseArrayCompat;
 
 import com.hzh.fast.permission.callback.PermissionCallback;
 import com.hzh.fast.permission.entity.RequestEntry;
+import com.hzh.fast.permission.util.Util;
 import com.hzh.lifecycle.dispatch.adapter.SimpleFragmentLifecycleAdapter;
 import com.hzh.lifecycle.dispatch.base.LifecycleFragment;
 
@@ -81,7 +80,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
      * @param perms    要申请的权限数组
      */
     public void requestPermission(final Context context, final PermissionCallback callback, final String[] perms) {
-        if (callback != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (!Util.isNeedCheck(context)) {
             callback.onGranted();
             return;
         }
@@ -107,7 +106,7 @@ public class PermissionDelegateFragment extends LifecycleFragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CODE:

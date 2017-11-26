@@ -1,16 +1,13 @@
 package com.hzh.fast.permission;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 
 import com.hzh.fast.permission.callback.PermissionCallback;
 import com.hzh.fast.permission.delegate.PermissionDelegateFinder;
 import com.hzh.fast.permission.delegate.PermissionDelegateFragment;
+import com.hzh.fast.permission.util.Util;
 
 /**
  * Created by Hezihao on 2017/7/10.
@@ -30,23 +27,10 @@ public class FastPermission {
     }
 
     /**
-     * 小于6.0则不检查权限
-     *
-     * @return 返回true代表版本号大于6.0需要检查权限
-     */
-    private boolean isNeedCheck() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
-    /**
      * 检查指定权限是否已经获取
      */
     public boolean isAccept(Context context, String permission) {
-        if (!isNeedCheck()) {
-            return true;
-        } else {
-            return isNeedCheck() && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
-        }
+        return Util.isAccept(context, permission);
     }
 
     /**
@@ -56,7 +40,7 @@ public class FastPermission {
      * @param callback 权限申请 成功、失败回调
      * @param perms    权限列表数组
      */
-    public void request(@NonNull FragmentActivity activity, @NonNull PermissionCallback callback, @NonNull String[] perms) {
+    public void request(FragmentActivity activity, PermissionCallback callback, String[] perms) {
         PermissionDelegateFragment delegate = findDelegate(activity);
         if (delegate != null) {
             delegate.requestPermission(activity, callback, perms);
@@ -70,7 +54,7 @@ public class FastPermission {
      * @param callback 权限申请 成功、失败回调
      * @param perms    权限列表数组
      */
-    public void request(@NonNull Fragment fragment, @NonNull PermissionCallback callback, @NonNull String[] perms) {
+    public void request(Fragment fragment, PermissionCallback callback, String[] perms) {
         FragmentActivity activity = fragment.getActivity();
         if (activity != null && !activity.isFinishing()) {
             PermissionDelegateFragment delegate = findDelegate(activity);
