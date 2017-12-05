@@ -7,10 +7,10 @@ android {
     buildToolsVersion "26.0.1"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 9
         targetSdkVersion 26
-        versionCode 4
-        versionName "1.0.6"
+        versionCode 6
+        versionName "1.0.7"
     }
     buildTypes {
         release {
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.hzh:lifecycle-dispatch:1.0.0'
+    compile 'com.hzh:lifecycle-dispatch:1.0.3'
 }
 
 //项目主页
@@ -35,7 +35,7 @@ def libName = "fast-permission"
 //发布到组织名称名字，必须填写
 group = "com.hzh"
 // 版本号，下次更新是只需要更改版本号，并且 gradle bintrayUpload 即可
-version = "1.0.6"
+version = "1.0.7"
 //上面配置后上传至JCenter后的编译路径是这样的： compile 'me.songning.CircleView:library:1.0.0'
 
 //生成源文件

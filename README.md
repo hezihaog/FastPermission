@@ -3,4 +3,4 @@
 
 ### 快速使用
 - gradle 依赖
-- compile 'com.hzh:fast-permission:1.0.6'
+- compile 'com.hzh:fast-permission:1.0.7'
