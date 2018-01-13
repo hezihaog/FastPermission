@@ -6,7 +6,7 @@
 - compile 'com.hzh:fast-permission:1.0.7'
 
 ### 文章地址
-- https://www.jianshu.com/p/f61f5ce533e5
+- [简书链接](https://www.jianshu.com/p/f61f5ce533e5)
 
 ### 一、引言
     日常Android开发中，要兼容6.0以上版本时，躲不过难免就是6.0新增的运行时权限申请了，那作为Android开发者，就必须掌握并适配这种情况。
