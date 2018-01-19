@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
      * @param perms 需要申请的权限数组
      */
     private void requestPermission(String[] perms) {
-        FastPermission.getInstance().request(MainActivity.this, new PermissionCallback() {
+        FastPermission.request(MainActivity.this, new PermissionCallback() {
             @Override
             public void onGranted() {
                 Toast.makeText(MainActivity.this, "申请权限成功，可进行下一步操作", Toast.LENGTH_SHORT).show();

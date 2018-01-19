@@ -18,18 +18,10 @@ public class FastPermission {
     private FastPermission() {
     }
 
-    private static class Singleton {
-        private static final FastPermission instance = new FastPermission();
-    }
-
-    public static FastPermission getInstance() {
-        return Singleton.instance;
-    }
-
     /**
      * 检查指定权限是否已经获取
      */
-    public boolean isAccept(Context context, String permission) {
+    public static boolean isAccept(Context context, String permission) {
         return Util.isAccept(context, permission);
     }
 
@@ -40,7 +32,7 @@ public class FastPermission {
      * @param callback 权限申请 成功、失败回调
      * @param perms    权限列表数组
      */
-    public void request(FragmentActivity activity, PermissionCallback callback, String[] perms) {
+    public static void request(FragmentActivity activity, PermissionCallback callback, String[] perms) {
         PermissionDelegateFragment delegate = findDelegate(activity);
         if (delegate != null) {
             delegate.requestPermission(activity, callback, perms);
@@ -54,7 +46,7 @@ public class FastPermission {
      * @param callback 权限申请 成功、失败回调
      * @param perms    权限列表数组
      */
-    public void request(Fragment fragment, PermissionCallback callback, String[] perms) {
+    public static void request(Fragment fragment, PermissionCallback callback, String[] perms) {
         FragmentActivity activity = fragment.getActivity();
         if (activity != null && !activity.isFinishing()) {
             PermissionDelegateFragment delegate = findDelegate(activity);
@@ -68,7 +60,7 @@ public class FastPermission {
     /**
      * 构建申请权限用的隐藏的fragment
      */
-    private PermissionDelegateFragment findDelegate(FragmentActivity activity) {
+    private static PermissionDelegateFragment findDelegate(FragmentActivity activity) {
         return PermissionDelegateFinder.getInstance().find(activity);
     }
 }

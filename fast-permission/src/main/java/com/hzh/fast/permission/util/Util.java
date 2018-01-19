@@ -22,8 +22,7 @@ public class Util {
      */
     public static boolean isNeedCheck(Context context) {
         int targetSdkVersion = context.getApplicationInfo().targetSdkVersion;
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && targetSdkVersion >= Build.VERSION_CODES.M;
+        return Build.VERSION.SDK_INT >= 23 && targetSdkVersion >= 23;
     }
 
     /**

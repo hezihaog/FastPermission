@@ -133,6 +133,8 @@ public class PermissionDelegateFragment extends LifecycleFragment {
                     }
                 }
                 break;
+                default:
+                    break;
         }
     }
 }
