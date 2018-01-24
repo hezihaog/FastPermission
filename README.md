@@ -3,7 +3,7 @@
 
 ### 快速使用
 - gradle 依赖
-- compile 'com.hzh:fast-permission:1.0.7'
+- compile 'com.hzh:fast-permission:1.0.8'
 
 ### 文章地址
 - [简书链接](https://www.jianshu.com/p/f61f5ce533e5)
@@ -553,5 +553,5 @@ public class MainActivity extends AppCompatActivity {
 - 求start，issue，push request ！
 - gradle 依赖
 ```
-compile 'com.hzh:fast-permission:1.0.7'
+compile 'com.hzh:fast-permission:1.0.8'
 ```
