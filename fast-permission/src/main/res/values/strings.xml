@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">FastPermission</string>
+    <string name="md_dialog_title">提示</string>
+    <string name="md_dialog_content">内容</string>
+    <string name="md_dialog_ok">確認</string>
+    <string name="md_dialog_cancel">取消</string>
+    <string name="md_dialog_go_to_setting">去設置</string>
+    <string name="md_dialog_go_to_setting_title">温馨提示</string>
+    <string name="md_dialog_content_head">我們需要以下權限爲你工作，請點擊“確定”開啓權限</string>
+    <string name="md_dialog_go_to_setting_tip">您已拒絕許可權，可點擊“去設置”開啟相關許可權</string>
 </resources>

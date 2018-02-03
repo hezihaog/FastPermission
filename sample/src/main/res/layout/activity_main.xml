@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
     tools:context="com.hzh.fast.permission.sample.MainActivity">
 
     <Button
-        android:id="@+id/request"
+        android:id="@+id/getPermission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Request Permission" />
-</FrameLayout>
+        android:text="一次申请一个权限" />
+
+    <Button
+        android:id="@+id/getPermissionList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="一次申请多个权限" />
+
+    <Button
+        android:id="@+id/getPermissionWithTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="一次申请一个权限（使用拒绝弹框）" />
+
+    <Button
+        android:id="@+id/requestPermissionListWithTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="一次申请多个权限（使用拒绝弹框）" />
+
+    <Button
+        android:id="@+id/callPhoneBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="拨打电话" />
+</LinearLayout>

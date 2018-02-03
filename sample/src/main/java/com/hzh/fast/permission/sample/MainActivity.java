@@ -1,79 +1,176 @@
 package com.hzh.fast.permission.sample;
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.os.Build;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.hzh.fast.permission.FastPermission;
+import com.hzh.fast.permission.callback.AbsDeniedCallback;
 import com.hzh.fast.permission.callback.PermissionCallback;
+import com.hzh.fast.permission.entity.DescriptionWrapper;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String[] permissionList;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            permissionList = new String[]
-                    {Manifest.permission.READ_EXTERNAL_STORAGE
-                            , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE};
-        } else {
-            permissionList = new String[]
-                    {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE};
-        }
+        onFindView();
+    }
 
-        Button request = (Button) findViewById(R.id.request);
-        request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestPermission(permissionList);
-            }
-        });
+    private void onFindView() {
+        Button getPermissionBtn = (Button) findViewById(R.id.getPermission);
+        Button getPermissionListBtn = (Button) findViewById(R.id.getPermissionList);
+        Button getPermissionWithTipBtn = (Button) findViewById(R.id.getPermissionWithTip);
+        Button requestPermissionListWithTipBtn = (Button) findViewById(R.id.requestPermissionListWithTip);
+        Button callPhoneBtn = (Button) findViewById(R.id.callPhoneBtn);
+        //设置点击监听
+        getPermissionBtn.setOnClickListener(this);
+        getPermissionListBtn.setOnClickListener(this);
+        getPermissionWithTipBtn.setOnClickListener(this);
+        requestPermissionListWithTipBtn.setOnClickListener(this);
+        callPhoneBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.getPermission:
+                getPermission();
+                break;
+            case R.id.getPermissionList:
+                getPermissionList();
+                break;
+            case R.id.getPermissionWithTip:
+                getPermissionWithTip();
+                break;
+            case R.id.requestPermissionListWithTip:
+                getPermissionListWithTip();
+                break;
+            case R.id.callPhoneBtn:
+                callPhone();
+                break;
+            default:
+                break;
+        }
     }
 
     /**
-     * 请求权限
-     *
-     * @param perms 需要申请的权限数组
+     * 一次申请单个权限，被拒绝时不提示弹窗
      */
-    private void requestPermission(String[] perms) {
-        FastPermission.request(MainActivity.this, new PermissionCallback() {
+    public void getPermission() {
+        FastPermission.request(this, new PermissionCallback() {
             @Override
             public void onGranted() {
-                Toast.makeText(MainActivity.this, "申请权限成功，可进行下一步操作", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "已允许单个权限", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onDenied(final List<String> perms) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("申请权限")
-                        .setMessage("请允许app申请的所有权限，以便正常使用")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //再次请求未允许的权限
-                                String[] againPerms = new String[perms.size()];
-                                for (int j = 0; j < perms.size(); j++) {
-                                    againPerms[j] = perms.get(j);
-                                }
-                                requestPermission(againPerms);
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).create().show();
+            public void onDenied(List<String> perms) {
+                for (int i = 0; i < perms.size(); i++) {
+                    Toast.makeText(MainActivity.this, perms.get(i) + " 权限被拒绝", Toast.LENGTH_SHORT).show();
+                }
             }
-        }, perms);
+        }, new String[]{Manifest.permission.READ_CONTACTS});
+    }
+
+    /**
+     * 一次申请多个权限，被拒绝时不弹窗
+     */
+    public void getPermissionList() {
+        FastPermission.request(this, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                Toast.makeText(MainActivity.this, "所有权限都被同意", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDenied(List<String> perms) {
+                for (String perm : perms) {
+                    Toast.makeText(MainActivity.this, perm + " 权限被拒绝", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new String[]{Manifest.permission.INTERNET, Manifest.permission.READ_EXTERNAL_STORAGE
+                , Manifest.permission.READ_CALENDAR, Manifest.permission.ACCESS_FINE_LOCATION});
+    }
+
+    /**
+     * 一次申请单个权限，被拒绝时弹窗
+     */
+    public void getPermissionWithTip() {
+        //组装解释对象数组，要和权限请求的顺序相同
+        DescriptionWrapper[] descriptionWrappers = new DescriptionWrapper[]{
+                new DescriptionWrapper("相机", "相机权限才能拍照喔")};
+        FastPermission.request(this, new AbsDeniedCallback(this, descriptionWrappers) {
+            @Override
+            public void onFinalDeniedAfter(List<String> perms) {
+                for (String perm : perms) {
+                    Toast.makeText(MainActivity.this, perm + " 权限被拒绝", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onGranted() {
+                Toast.makeText(MainActivity.this, "所有权限都被同意", Toast.LENGTH_SHORT).show();
+            }
+        }, new String[]{Manifest.permission.CAMERA});
+    }
+
+    /**
+     * 一次申请多个权限，被拒绝时弹窗
+     */
+    public void getPermissionListWithTip() {
+        DescriptionWrapper[] descriptionWrappers = new DescriptionWrapper[]{
+                new DescriptionWrapper("录音", "允许才能录音喔"),
+                new DescriptionWrapper("短信", "允许才能看短信喔"),
+                new DescriptionWrapper("存储", "允许才能存储喔"),
+                new DescriptionWrapper("打电话", "允许才能打电话呢"),
+                new DescriptionWrapper("位置", "允许才能看位置呢")
+        };
+        FastPermission.request(this, new AbsDeniedCallback(this, descriptionWrappers) {
+
+            @Override
+            public void onGranted() {
+                Toast.makeText(MainActivity.this, "所有权限都被同意", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinalDeniedAfter(List<String> perms) {
+                for (String perm : perms) {
+                    Toast.makeText(MainActivity.this, perm + " 权限被拒绝", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new String[]{
+                Manifest.permission.RECORD_AUDIO
+                , Manifest.permission.READ_SMS
+                , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                , Manifest.permission.READ_CALENDAR
+                , Manifest.permission.ACCESS_FINE_LOCATION});
+    }
+
+    /**
+     * 申请打电话权限
+     */
+    public void callPhone() {
+        FastPermission.request(this, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                Intent phoneIntent = new Intent("android.intent.action.CALL", Uri.parse("tel:" + "15814871500"));
+                startActivity(phoneIntent);
+            }
+
+            @Override
+            public void onDenied(List<String> perms) {
+                for (String perm : perms) {
+                    Toast.makeText(MainActivity.this, perm + " 权限被拒绝", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new String[]{Manifest.permission.CALL_PHONE});
     }
 }

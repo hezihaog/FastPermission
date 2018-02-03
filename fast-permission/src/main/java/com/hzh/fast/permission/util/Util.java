@@ -1,7 +1,9 @@
 package com.hzh.fast.permission.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
@@ -36,5 +38,16 @@ public class Util {
                     && ContextCompat.checkSelfPermission(context, permission)
                     == PackageManager.PERMISSION_GRANTED;
         }
+    }
+
+    /**
+     * 跳转到应用的设置界面
+     */
+    public static void goToAppDetailSetting(Context context) {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        localIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
+        context.startActivity(localIntent);
     }
 }

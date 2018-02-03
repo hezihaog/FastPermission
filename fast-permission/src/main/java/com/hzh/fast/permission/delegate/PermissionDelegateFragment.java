@@ -25,6 +25,11 @@ public class PermissionDelegateFragment extends LifecycleFragment {
     private static final int REQUEST_CODE = 0X0122;
     private SparseArrayCompat<RequestEntry> callbacks = new SparseArrayCompat<RequestEntry>();
 
+    public PermissionDelegateFragment() {
+        super();
+        setRetainInstance(true);
+    }
+
     public static PermissionDelegateFragment newInstance() {
         return new PermissionDelegateFragment();
     }
