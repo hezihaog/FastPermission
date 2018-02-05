@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.hzh.fast.permission.FastPermission;
-import com.hzh.fast.permission.callback.AbsDeniedCallback;
+import com.hzh.fast.permission.callback.SimpleDeniedCallback;
 import com.hzh.fast.permission.callback.PermissionCallback;
-import com.hzh.fast.permission.entity.DescriptionWrapper;
+import com.hzh.fast.permission.entity.Description;
 
 import java.util.List;
 
@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public void getPermissionWithTip() {
         //组装解释对象数组，要和权限请求的顺序相同
-        DescriptionWrapper[] descriptionWrappers = new DescriptionWrapper[]{
-                new DescriptionWrapper("相机", "相机权限才能拍照喔")};
-        FastPermission.request(this, new AbsDeniedCallback(this, descriptionWrappers) {
+        Description[] descriptions = new Description[]{
+                new Description("相机", "相机权限才能拍照喔")};
+        FastPermission.request(this, new SimpleDeniedCallback(this, descriptions) {
             @Override
             public void onFinalDeniedAfter(List<String> perms) {
                 for (String perm : perms) {
@@ -126,14 +126,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 一次申请多个权限，被拒绝时弹窗
      */
     public void getPermissionListWithTip() {
-        DescriptionWrapper[] descriptionWrappers = new DescriptionWrapper[]{
-                new DescriptionWrapper("录音", "允许才能录音喔"),
-                new DescriptionWrapper("短信", "允许才能看短信喔"),
-                new DescriptionWrapper("存储", "允许才能存储喔"),
-                new DescriptionWrapper("打电话", "允许才能打电话呢"),
-                new DescriptionWrapper("位置", "允许才能看位置呢")
+        Description[] descriptions = new Description[]{
+                new Description("录音", "允许才能录音喔"),
+                new Description("短信", "允许才能看短信喔"),
+                new Description("存储", "允许才能存储喔"),
+                new Description("打电话", "允许才能打电话呢"),
+                new Description("位置", "允许才能看位置呢")
         };
-        FastPermission.request(this, new AbsDeniedCallback(this, descriptionWrappers) {
+        FastPermission.request(this, new SimpleDeniedCallback(this, descriptions) {
 
             @Override
             public void onGranted() {

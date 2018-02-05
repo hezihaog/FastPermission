@@ -1,17 +1,17 @@
 package com.hzh.fast.permission.callback;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 
 import com.hzh.fast.permission.FastPermission;
 import com.hzh.fast.permission.R;
-import com.hzh.fast.permission.entity.DescriptionWrapper;
+import com.hzh.fast.permission.entity.Description;
 import com.hzh.fast.permission.util.Util;
-import com.hzh.fast.permission.widget.DeniedDialog;
 
 import java.util.List;
 
@@ -24,27 +24,27 @@ import java.util.List;
  * Email: hezihao@linghit.com
  */
 
-public abstract class AbsDeniedCallback implements PermissionCallback, IFinalDeniedAfterAction {
+public abstract class SimpleDeniedCallback implements PermissionCallback, IFinalDeniedAfterAction {
     private FragmentActivity activity;
     private String titleText;
-    private DescriptionWrapper[] descriptionWrappers;
+    private Description[] descriptions;
 
     /**
      * 不设置dialog标题
      *
-     * @param descriptionWrappers 权限拒绝，权限名和解释的对象数组
+     * @param descriptions 权限拒绝，权限名和解释的对象数组
      */
-    public AbsDeniedCallback(FragmentActivity activity, DescriptionWrapper[] descriptionWrappers) {
-        this(activity, null, descriptionWrappers);
+    public SimpleDeniedCallback(FragmentActivity activity, Description[] descriptions) {
+        this(activity, null, descriptions);
     }
 
     /**
      * 可以给dialog设置标题
      */
-    public AbsDeniedCallback(FragmentActivity activity, String titleText, DescriptionWrapper[] descriptionWrappers) {
+    public SimpleDeniedCallback(FragmentActivity activity, String titleText, Description[] descriptions) {
         this.activity = activity;
         this.titleText = titleText;
-        this.descriptionWrappers = descriptionWrappers;
+        this.descriptions = descriptions;
     }
 
     /**
@@ -55,26 +55,29 @@ public abstract class AbsDeniedCallback implements PermissionCallback, IFinalDen
     @Override
     public final void onDenied(final List<String> perms) {
         //用户拒绝，弹出解释弹窗，引导用户点确认再次允许
-        final DeniedDialog dialog = new DeniedDialog(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         if (titleText != null) {
-            dialog.setTitle(titleText);
+            builder.setTitle(titleText);
         }
-        dialog.setContentText(buildTipTextWithColor(descriptionWrappers));
-        dialog.setOnDialogClickListener(new DeniedDialog.OnDialogClickListener() {
+        builder.setMessage(buildTipTextWithColor(descriptions));
+        builder.setPositiveButton(activity.getString(R.string.md_dialog_ok), new DialogInterface.OnClickListener() {
             @Override
-            public void onClickOk() {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //用户同意允许，则再次请求权限
-                requestAgain(activity, perms, AbsDeniedCallback.this);
+                requestAgain(activity, perms, SimpleDeniedCallback.this);
             }
-
+        });
+        builder.setNegativeButton(activity.getString(R.string.md_dialog_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClickCancel() {
+            public void onClick(DialogInterface dialog, int which) {
                 //用户还是拒绝，弹窗提示可以去到去设置界面开启权限
                 dialog.dismiss();
                 showGoToSettingDialog(activity, perms);
             }
         });
+        AlertDialog dialog = builder.create();
+
         dialog.show();
     }
 
@@ -82,46 +85,46 @@ public abstract class AbsDeniedCallback implements PermissionCallback, IFinalDen
      * 显示跳转到去设置界面弹窗
      */
     private void showGoToSettingDialog(final Activity activity, final List<String> perms) {
-        final DeniedDialog dialog = new DeniedDialog(activity);
-        dialog.setTitle(activity.getResources().getString(R.string.md_dialog_go_to_setting_title));
-        dialog.setContentText(activity.getResources().getString(R.string.md_dialog_go_to_setting_tip));
-        dialog.setOkButtonText(activity.getResources().getString(R.string.md_dialog_go_to_setting));
-        dialog.setCancelButtonText(activity.getResources().getString(R.string.md_dialog_cancel));
-        dialog.setOnDialogClickListener(new DeniedDialog.OnDialogClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(activity.getResources().getString(R.string.md_dialog_go_to_setting_title));
+        builder.setMessage(activity.getResources().getString(R.string.md_dialog_go_to_setting_tip));
+        builder.setPositiveButton(activity.getResources().getString(R.string.md_dialog_go_to_setting), new DialogInterface.OnClickListener() {
             @Override
-            public void onClickOk() {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //用户点击了去设置，跳转设置界面
                 Util.goToAppDetailSetting(activity);
             }
-
+        });
+        builder.setNegativeButton(activity.getResources().getString(R.string.md_dialog_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClickCancel() {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //用户点击取消，执行最终的拒绝操作
                 onFinalDeniedAfter(perms);
             }
         });
-        dialog.show();
+        builder.create().show();
     }
 
     /**
      * 拼接解释文字
      */
-    private CharSequence buildTipTextWithColor(DescriptionWrapper[] descriptionWrappers) {
+    private CharSequence buildTipTextWithColor(Description[] descriptions) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         int start = 0;
-        for (int i = 0; i < descriptionWrappers.length; i++) {
-            DescriptionWrapper wrapper = descriptionWrappers[i];
+        for (int i = 0; i < descriptions.length; i++) {
+            Description wrapper = descriptions[i];
             String name = wrapper.getPermissionName();
             String description = wrapper.getDescription();
             builder.append(name);
-            ForegroundColorSpan span = new ForegroundColorSpan(Color.parseColor("#37ADA4"));
+            ForegroundColorSpan span = new ForegroundColorSpan(activity.getApplicationContext()
+                    .getResources().getColor(R.color.fast_permission_black));
             builder.setSpan(span, start, start + name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.append("：");
             builder.append(description);
             start = start + name.length() + 2 + description.length();
-            if (i != descriptionWrappers.length - 1) {
+            if (i != descriptions.length - 1) {
                 builder.append("\n");
             }
         }
@@ -131,7 +134,7 @@ public abstract class AbsDeniedCallback implements PermissionCallback, IFinalDen
     /**
      * 再次请求
      */
-    private void requestAgain(final FragmentActivity activity, List<String> perms, final AbsDeniedCallback callback) {
+    private void requestAgain(final FragmentActivity activity, List<String> perms, final SimpleDeniedCallback callback) {
         //重新组装权限数组
         String[] permissionList = new String[perms.size()];
         for (int i = 0; i < perms.size(); i++) {

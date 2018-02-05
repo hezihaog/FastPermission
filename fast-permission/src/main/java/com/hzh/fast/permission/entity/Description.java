@@ -11,7 +11,7 @@ import android.content.Context;
  * Email: hezihao@linghit.com
  */
 
-public class DescriptionWrapper {
+public class Description {
     /**
      * 权限名
      */
@@ -21,12 +21,12 @@ public class DescriptionWrapper {
      */
     private String description;
 
-    public DescriptionWrapper(String permissionName, String description) {
+    public Description(String permissionName, String description) {
         this.permissionName = permissionName;
         this.description = description;
     }
 
-    public DescriptionWrapper(Context context, int permissionNameResId, int descriptionResId) {
+    public Description(Context context, int permissionNameResId, int descriptionResId) {
         this.permissionName = context.getResources().getString(permissionNameResId);
         this.description = context.getResources().getString(descriptionResId);
     }
